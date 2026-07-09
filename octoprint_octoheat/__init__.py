@@ -17,7 +17,6 @@ class OctoHeatPlugin(
     octoprint.plugin.TemplatePlugin,
     octoprint.plugin.AssetPlugin,
     octoprint.plugin.SimpleApiPlugin,
-    octoprint.plugin.PrinterStatePlugin,
 ):
 
     def __init__(self):
