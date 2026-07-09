@@ -1,0 +1,85 @@
+#settings_plugin_octoheat h4 {
+    margin-top: 20px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #ddd;
+}
+
+#settings_plugin_octoheat .help-block {
+    font-size: 12px;
+    color: #666;
+}
+
+#settings_plugin_octoheat .help-inline {
+    margin-left: 10px;
+    color: #666;
+}
+
+#heater_indicator {
+    display: inline-block;
+    position: relative;
+}
+
+#heater_indicator #heater_icon {
+    font-size: 1.1em;
+    transition: color 0.3s, filter 0.3s;
+}
+
+#heater_indicator.auto-heating #heater_icon {
+    color: #cc3333;
+    filter: drop-shadow(0 0 6px #cc3333);
+}
+
+#heater_indicator.auto-waiting #heater_icon {
+    color: #f0ad4e;
+    filter: drop-shadow(0 0 4px #f0ad4e);
+}
+
+#heater_indicator.auto-off #heater_icon {
+    color: #888;
+    filter: grayscale(100%);
+    opacity: 0.5;
+}
+
+#heater_indicator.on #heater_icon {
+    color: #5daa5d;
+    filter: drop-shadow(0 0 4px #5daa5d);
+}
+
+#heater_indicator.off #heater_icon {
+    color: #888;
+    filter: grayscale(100%);
+    opacity: 0.6;
+}
+
+#heater_indicator.off::after {
+    content: "\274C";
+    position: absolute;
+    top: -4px;
+    right: -6px;
+    font-size: 0.5em;
+    color: #cc3333;
+    background: white;
+    border-radius: 50%;
+    width: 12px;
+    height: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 12px;
+}
+
+#heater_indicator.runaway #heater_icon {
+    color: #cc3333;
+    filter: drop-shadow(0 0 6px #cc3333);
+}
+
+#heater_indicator #heater_warning {
+    font-size: 0.8em;
+    vertical-align: super;
+    margin-left: 2px;
+    color: #cc3333;
+}
+
+#heater_indicator:hover {
+    opacity: 0.8;
+}

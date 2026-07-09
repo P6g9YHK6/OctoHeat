@@ -1,0 +1,191 @@
+<form class="form-horizontal">
+    <h4>{{ _('Home Assistant Connection') }}</h4>
+
+    <div class="control-group">
+        <label class="control-label">{{ _('HA URL') }}</label>
+        <div class="controls">
+            <input type="text" class="input-block-level"
+                   data-bind="value: settings.plugins.octoheat.ha_url"
+                   title="URL of your Home Assistant instance, e.g. http://homeassistant:8123">
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label">{{ _('HA Token') }}</label>
+        <div class="controls">
+            <input type="password" class="input-block-level"
+                   data-bind="value: settings.plugins.octoheat.ha_token"
+                   title="Long-lived access token from Home Assistant (Profile → Long-lived access tokens)">
+            <span class="help-block">Long-lived access token from Home Assistant</span>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label">{{ _('Temperature Sensor') }}</label>
+        <div class="controls">
+            <input type="text" class="input-block-level"
+                   data-bind="value: settings.plugins.octoheat.ha_temp_sensor"
+                   title="HA entity ID for the chamber temperature sensor, e.g. sensor.chamber_temp">
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label">{{ _('Heater Switch') }}</label>
+        <div class="controls">
+            <input type="text" class="input-block-level"
+                   data-bind="value: settings.plugins.octoheat.ha_heater_switch"
+                   title="HA entity ID for the heater switch, e.g. switch.heater">
+        </div>
+    </div>
+
+    <div class="control-group">
+        <div class="controls">
+            <button class="btn btn-primary" data-bind="click: testHaConnection">
+                {{ _('Test Connection') }}
+            </button>
+            <span class="help-inline" data-bind="text: connectionTestResult"></span>
+        </div>
+    </div>
+
+    <h4>{{ _('Control Mode') }}</h4>
+
+    <div class="control-group">
+        <label class="control-label">{{ _('Trigger') }}</label>
+        <div class="controls">
+            <select class="input-block-level"
+                    data-bind="value: settings.plugins.octoheat.trigger"
+                    title="When should the heater turn on?">
+                <option value="bed_set">{{ _('When bed temperature is set') }}</option>
+                <option value="print_running">{{ _('When print is running') }}</option>
+                <option value="thermostat">{{ _('Thermostat mode (always on when needed)') }}</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label">{{ _('Off Condition') }}</label>
+        <div class="controls">
+            <select class="input-block-level"
+                    data-bind="value: settings.plugins.octoheat.off_condition"
+                    title="When should the heater turn off?">
+                <option value="bed_unset">{{ _('When bed temperature is unset') }}</option>
+                <option value="print_idle">{{ _('When print is idle/paused/complete') }}</option>
+                <option value="thermostat">{{ _('Thermostat mode (temperature reached)') }}</option>
+            </select>
+        </div>
+    </div>
+
+    <h4>{{ _('Temperature Settings') }}</h4>
+
+    <div class="control-group">
+        <label class="control-label">{{ _('Temperature Mode') }}</label>
+        <div class="controls">
+            <select class="input-block-level"
+                    data-bind="value: settings.plugins.octoheat.temp_mode"
+                    title="Direct: set a fixed target. Bed offset: target follows bed temp + offset.">
+                <option value="direct">{{ _('Direct target temperature') }}</option>
+                <option value="bed_offset">{{ _('Bed temperature with offset') }}</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="control-group" data-bind="visible: settings.plugins.octoheat.temp_mode() === 'direct'">
+        <label class="control-label">{{ _('Target Temperature (°C)') }}</label>
+        <div class="controls">
+            <input type="number" class="input-block-level"
+                   data-bind="value: settings.plugins.octoheat.target_temp"
+                   title="Desired chamber temperature in °C when using direct mode"
+                   min="0" max="300" step="1">
+        </div>
+    </div>
+
+    <div data-bind="visible: settings.plugins.octoheat.temp_mode() === 'bed_offset'">
+        <div class="control-group">
+            <label class="control-label">{{ _('Offset Type') }}</label>
+            <div class="controls">
+                <select class="input-block-level"
+                        data-bind="value: settings.plugins.octoheat.offset_type"
+                        title="Raw: add fixed °C value. Percent: add percentage of bed temp.">
+                    <option value="raw">{{ _('Raw value (°C)') }}</option>
+                    <option value="percent">{{ _('Percentage (%)') }}</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="control-group" data-bind="visible: settings.plugins.octoheat.offset_type() === 'raw'">
+            <label class="control-label">{{ _('Offset Value (°C)') }}</label>
+            <div class="controls">
+                <input type="number" class="input-block-level"
+                       data-bind="value: settings.plugins.octoheat.offset_value"
+                       title="Temperature to add to bed temp (can be negative)"
+                       min="-200" max="200" step="0.5">
+            </div>
+        </div>
+
+        <div class="control-group" data-bind="visible: settings.plugins.octoheat.offset_type() === 'percent'">
+            <label class="control-label">{{ _('Offset Percentage (%)') }}</label>
+            <div class="controls">
+                <input type="number" class="input-block-level"
+                       data-bind="value: settings.plugins.octoheat.offset_percent"
+                       title="Percentage of bed temp to add (can be negative)"
+                       min="-100" max="100" step="1">
+            </div>
+        </div>
+    </div>
+
+    <div class="control-group" data-bind="visible: settings.plugins.octoheat.trigger() === 'thermostat'">
+        <label class="control-label">{{ _('Hysteresis (°C)') }}</label>
+        <div class="controls">
+            <input type="number" class="input-block-level"
+                   data-bind="value: settings.plugins.octoheat.hysteresis"
+                   title="Temperature deadband to prevent rapid toggling (°C)"
+                   min="0" max="20" step="0.5">
+            <span class="help-block">Temperature tolerance before toggling</span>
+        </div>
+    </div>
+
+    <h4>{{ _('Polling') }}</h4>
+
+    <div class="control-group">
+        <label class="control-label">{{ _('Update Interval (seconds)') }}</label>
+        <div class="controls">
+            <input type="number" class="input-block-level"
+                   data-bind="value: settings.plugins.octoheat.update_interval"
+                   title="How often to check temperature and update heater state (seconds)"
+                   min="5" max="300" step="5">
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label">{{ _('Temp Unavailable Timeout (seconds)') }}</label>
+        <div class="controls">
+            <input type="number" class="input-block-level"
+                   data-bind="value: settings.plugins.octoheat.temp_unavailable_timeout"
+                   title="Turn off heater if temperature sensor is unavailable for this time"
+                   min="30" max="600" step="10">
+        </div>
+    </div>
+
+    <h4>{{ _('Safety') }}</h4>
+
+    <div class="control-group">
+        <label class="control-label">{{ _('Thermal Runaway Protection') }}</label>
+        <div class="controls">
+            <input type="checkbox"
+                   data-bind="checked: settings.plugins.octoheat.thermal_runaway_enabled"
+                   title="Enable thermal runaway protection - turns off heater if chamber temp exceeds threshold">
+            <span class="help-inline">Enable thermal runaway protection</span>
+        </div>
+    </div>
+
+    <div class="control-group" data-bind="visible: settings.plugins.octoheat.thermal_runaway_enabled">
+        <label class="control-label">{{ _('Thermal Runaway Temperature (°C)') }}</label>
+        <div class="controls">
+            <input type="number" class="input-block-level"
+                   data-bind="value: settings.plugins.octoheat.thermal_runaway_temp"
+                   title="Temperature threshold to trigger thermal runaway protection"
+                   min="30" max="150" step="1">
+            <span class="help-block">If chamber temperature exceeds this, heater is turned off</span>
+        </div>
+    </div>
+</form>
