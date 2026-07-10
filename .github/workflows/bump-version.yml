@@ -18,28 +18,31 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: Bump minor version
+      - name: Bump and push
         run: |
-          # Sync with remote first
-          git fetch origin main
-          git reset --hard origin/main
-
-          # Read current version
-          CURRENT=$(grep -oP '__plugin_version__ = "\K[0-9]+\.[0-9]+\.[0-9]+' octoprint_octoheat/__init__.py)
-          MAJOR=$(echo "$CURRENT" | cut -d. -f1)
-          MINOR=$(echo "$CURRENT" | cut -d. -f2)
-          NEW_MINOR=$((MINOR + 1))
-          NEW_VERSION="${MAJOR}.${NEW_MINOR}.0"
-
-          echo "Bumping version: ${CURRENT} -> ${NEW_VERSION}"
-
-          sed -i "s/__plugin_version__ = \"${CURRENT}\"/__plugin_version__ = \"${NEW_VERSION}\"/" octoprint_octoheat/__init__.py
-          sed -i "s/plugin_version = \"${CURRENT}\"/plugin_version = \"${NEW_VERSION}\"/" setup.py
-
-          # Commit and push
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git diff --cached --quiet && echo "No changes" && exit 0
-          git commit -m "Bump version [skip ci]"
-          git push
+
+          for i in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+
+            CURRENT=$(grep -oP '__plugin_version__ = "\K[0-9]+\.[0-9]+\.[0-9]+' octoprint_octoheat/__init__.py)
+            MAJOR=$(echo "$CURRENT" | cut -d. -f1)
+            MINOR=$(echo "$CURRENT" | cut -d. -f2)
+            NEW_MINOR=$((MINOR + 1))
+            NEW_VERSION="${MAJOR}.${NEW_MINOR}.0"
+
+            sed -i "s/__plugin_version__ = \"${CURRENT}\"/__plugin_version__ = \"${NEW_VERSION}\"/" octoprint_octoheat/__init__.py
+            sed -i "s/plugin_version = \"${CURRENT}\"/plugin_version = \"${NEW_VERSION}\"/" setup.py
+
+            git add -A
+            git commit -m "Bump version [skip ci]"
+            git push && echo "Pushed version ${NEW_VERSION}" && exit 0
+
+            echo "Push rejected, retrying ($i/5)..."
+            git reset --hard HEAD~1
+            sleep 3
+          done
+          echo "Failed after 5 retries"
+          exit 1
