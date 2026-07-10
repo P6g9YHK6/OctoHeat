@@ -107,7 +107,7 @@
                         data-bind="value: settings.plugins.octoheat.offset_type"
                         title="Raw: add fixed °C value. Percent: add percentage of bed temp.">
                     <option value="raw">{{ _('Raw value (°C)') }}</option>
-                    <option value="percent">{{ _('Percentage (%)') }}</option>
+                    <option value="percent">{{ _('Percentage') }} (%%)</option>
                 </select>
             </div>
         </div>
@@ -123,7 +123,7 @@
         </div>
 
         <div class="control-group" data-bind="visible: settings.plugins.octoheat.offset_type() === 'percent'">
-            <label class="control-label">{{ _('Offset Percentage (%)') }}</label>
+            <label class="control-label">{{ _('Offset Percentage') }} (%%)</label>
             <div class="controls">
                 <input type="number" class="input-block-level"
                        data-bind="value: settings.plugins.octoheat.offset_percent"
