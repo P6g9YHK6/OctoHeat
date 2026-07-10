@@ -47,12 +47,18 @@ class OctoHeatPlugin(
             const.SETTING_THERMAL_RUNAWAY_TRIGGERED: False,
         }
 
-    def on_after_startup(self):
+    def on_settings_load(self):
+        import copy
+        data = copy.deepcopy(self._settings.get_all_data(merged=True))
         defaults = self.get_settings_defaults()
-        for key in defaults:
-            self._settings.set([key], defaults[key])
-        self._settings.save()
+        for key, default in defaults.items():
+            if key not in data or data[key] is None:
+                data[key] = default
+        if self.config_version_key in data:
+            del data[self.config_version_key]
+        return data
 
+    def on_after_startup(self):
         ha_url = self._settings.get([const.SETTING_HA_URL])
         if ha_url and ha_url.startswith("http://"):
             logger.warning("OctoHeat: Home Assistant URL uses HTTP (insecure). "
