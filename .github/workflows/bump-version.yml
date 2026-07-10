@@ -7,6 +7,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: bump-version
+  cancel-in-progress: true
+
 jobs:
   bump:
     runs-on: ubuntu-latest
@@ -14,11 +18,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 2
+
+      - name: Check if last commit was already a bump
+        id: check
+        run: |
+          if git log -1 --pretty=format:'%s' | grep -q "Bump version"; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Bump minor version
+        if: steps.check.outputs.skip != 'true'
         run: |
-          # Read current version from __init__.py
           CURRENT=$(grep -oP '__plugin_version__ = "\K[0-9]+\.[0-9]+\.[0-9]+' octoprint_octoheat/__init__.py)
           MAJOR=$(echo "$CURRENT" | cut -d. -f1)
           MINOR=$(echo "$CURRENT" | cut -d. -f2)
@@ -27,13 +38,11 @@ jobs:
 
           echo "Bumping version: ${CURRENT} -> ${NEW_VERSION}"
 
-          # Update __init__.py
           sed -i "s/__plugin_version__ = \"${CURRENT}\"/__plugin_version__ = \"${NEW_VERSION}\"/" octoprint_octoheat/__init__.py
-
-          # Update setup.py
           sed -i "s/plugin_version = \"${CURRENT}\"/plugin_version = \"${NEW_VERSION}\"/" setup.py
 
       - name: Commit and push
+        if: steps.check.outputs.skip != 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -43,7 +52,7 @@ jobs:
           for i in 1 2 3; do
             git pull --rebase origin main && git push && exit 0
             echo "Push rejected, retrying ($i/3)..."
-            sleep 2
+            sleep 5
           done
           echo "Push failed after 3 retries"
           exit 1
