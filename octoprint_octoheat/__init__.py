@@ -17,6 +17,7 @@ class OctoHeatPlugin(
     octoprint.plugin.TemplatePlugin,
     octoprint.plugin.AssetPlugin,
     octoprint.plugin.SimpleApiPlugin,
+    octoprint.plugin.SoftwareUpdatePlugin,
 ):
 
     def __init__(self):
@@ -143,6 +144,19 @@ class OctoHeatPlugin(
             status = self._controller.run_control_cycle()
             self._send_status_message(status)
 
+    def get_update_information(self):
+        return {
+            "octoheat": {
+                "displayName": "OctoHeat",
+                "displayVersion": __plugin_version__,
+                "type": "github_release",
+                "user": "P6g9YHK6",
+                "repo": "OctoHeat",
+                "current": __plugin_version__,
+                "pip": "https://github.com/P6g9YHK6/OctoHeat/archive/{target_version}.zip",
+            }
+        }
+
 
 __plugin_implementation__ = OctoHeatPlugin()
 
@@ -153,3 +167,4 @@ __plugin_author__ = "P6g9YHK6"
 __plugin_url__ = "https://github.com/P6g9YHK6/OctoHeat"
 __plugin_license__ = "AGPLv3"
 __plugin_pythoncompat__ = ">=3.7"
+__plugin_privacypolicy__ = "https://github.com/P6g9YHK6/OctoHeat/blob/main/PRIVACY.md"
