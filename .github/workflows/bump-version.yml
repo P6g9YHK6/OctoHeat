@@ -14,21 +14,13 @@ concurrency:
 jobs:
   bump:
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    if: "!contains(github.event.head_commit.message, 'Bump version')"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
-          fetch-depth: 2
-
-      - name: Check if last commit was already a bump
-        id: check
-        run: |
-          if git log -1 --pretty=format:'%s' | grep -q "Bump version"; then
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-          fi
+          fetch-depth: 0
 
       - name: Bump minor version
-        if: steps.check.outputs.skip != 'true'
         run: |
           CURRENT=$(grep -oP '__plugin_version__ = "\K[0-9]+\.[0-9]+\.[0-9]+' octoprint_octoheat/__init__.py)
           MAJOR=$(echo "$CURRENT" | cut -d. -f1)
@@ -42,15 +34,16 @@ jobs:
           sed -i "s/plugin_version = \"${CURRENT}\"/plugin_version = \"${NEW_VERSION}\"/" setup.py
 
       - name: Commit and push
-        if: steps.check.outputs.skip != 'true'
         run: |
           git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           git diff --cached --quiet && exit 0
           git commit -m "Bump version [skip ci]"
           for i in 1 2 3; do
-            git pull --rebase origin main && git push && exit 0
+            git fetch origin main
+            git rebase origin/main
+            git push && exit 0
             echo "Push rejected, retrying ($i/3)..."
             sleep 5
           done
