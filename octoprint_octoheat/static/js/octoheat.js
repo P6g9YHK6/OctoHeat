@@ -4,6 +4,7 @@ $(function() {
 
         self.settingsViewModel = parameters[0];
         self.loginStateViewModel = parameters[1];
+        self.settings = self.settingsViewModel.settings;
         self.connectionTestResult = ko.observable("");
 
         self.heater_indicator = $("#heater_indicator");
