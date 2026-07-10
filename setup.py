@@ -36,6 +36,9 @@ plugin_url = "https://github.com/P6g9YHK6/OctoHeat"
 # plugin module
 plugin_license = "AGPLv3"
 
+# URL to the plugin's privacy policy, required for plugins that interact with external services
+plugin_privacypolicy = "https://github.com/P6g9YHK6/OctoHeat/blob/main/PRIVACY.md"
+
 # Any additional requirements besides OctoPrint should be listed here
 plugin_requires = ["requests"]
 

@@ -79,6 +79,8 @@ Offset can be a raw value (°C) or percentage of bed temperature.
 - Python 3.7+
 - Home Assistant instance with API access
 
+All communication with Home Assistant is local (between your OctoPrint server and your HA instance). Users are encouraged to use HTTPS for their Home Assistant instance when accessible over the internet. See [PRIVACY.md](PRIVACY.md) for details.
+
 ## License
 
 AGPLv3 - see [LICENSE](LICENSE) for details.
