@@ -144,6 +144,8 @@ class OctoHeatPlugin(
             self._send_status_message(status)
 
 
+__plugin_implementation__ = OctoHeatPlugin()
+
 __plugin_name__ = "OctoHeat"
 __plugin_version__ = "1.0.0"
 __plugin_description__ = "Control a heater via Home Assistant based on temperature sensor readings"
