@@ -8,8 +8,9 @@ logger = logging.getLogger(__name__)
 
 
 class HomeAssistantClient:
-    def __init__(self, ha_url: str, ha_token: str):
+    def __init__(self, ha_url: str, ha_token: str, verify_ssl: bool = True):
         self.ha_url = ha_url.rstrip("/")
+        self.verify_ssl = verify_ssl
         self.headers = {
             "Authorization": f"Bearer {ha_token}",
             "Content-Type": "application/json",
@@ -18,7 +19,7 @@ class HomeAssistantClient:
     def _get(self, path: str) -> Optional[dict]:
         url = f"{self.ha_url}{path}"
         try:
-            response = requests.get(url, headers=self.headers, timeout=10)
+            response = requests.get(url, headers=self.headers, timeout=10, verify=self.verify_ssl)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
@@ -28,7 +29,7 @@ class HomeAssistantClient:
     def _post(self, path: str, json: Optional[dict] = None) -> bool:
         url = f"{self.ha_url}{path}"
         try:
-            response = requests.post(url, headers=self.headers, json=json, timeout=10)
+            response = requests.post(url, headers=self.headers, json=json, timeout=10, verify=self.verify_ssl)
             response.raise_for_status()
             return True
         except requests.exceptions.RequestException as e:

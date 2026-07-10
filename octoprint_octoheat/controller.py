@@ -24,7 +24,8 @@ class HeaterController:
             return None
 
         if self._ha_client is None:
-            self._ha_client = HomeAssistantClient(ha_url, ha_token)
+            verify = self._settings.get([const.SETTING_HA_VERIFY_SSL])
+            self._ha_client = HomeAssistantClient(ha_url, ha_token, verify_ssl=verify)
 
         return self._ha_client
 

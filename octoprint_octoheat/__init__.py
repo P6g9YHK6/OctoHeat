@@ -30,6 +30,7 @@ class OctoHeatPlugin(
             const.SETTING_HA_TOKEN: "",
             const.SETTING_HA_TEMP_SENSOR: "",
             const.SETTING_HA_HEATER_SWITCH: "",
+            const.SETTING_HA_VERIFY_SSL: True,
             const.SETTING_TRIGGER: "bed_set",
             const.SETTING_OFF_CONDITION: "bed_unset",
             const.SETTING_TEMP_MODE: "direct",

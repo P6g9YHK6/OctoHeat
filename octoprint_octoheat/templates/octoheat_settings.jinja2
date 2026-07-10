@@ -47,6 +47,16 @@
         </div>
     </div>
 
+    <div class="control-group">
+        <label class="control-label">{{ _('Verify SSL Certificate') }}</label>
+        <div class="controls">
+            <input type="checkbox"
+                   data-bind="checked: settings.plugins.octoheat.ha_verify_ssl"
+                   title="Verify SSL certificate when connecting to Home Assistant">
+            <span class="help-inline">Uncheck if using self-signed certificates</span>
+        </div>
+    </div>
+
     <h4>{{ _('Control Mode') }}</h4>
 
     <div class="control-group">

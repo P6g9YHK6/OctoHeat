@@ -12,6 +12,8 @@ SETTING_OFFSET_VALUE = "offset_value"
 SETTING_OFFSET_PERCENT = "offset_percent"
 SETTING_OFFSET_TYPE = "offset_type"
 
+SETTING_HA_VERIFY_SSL = "ha_verify_ssl"
+
 SETTING_HYSTERESIS = "hysteresis"
 SETTING_UPDATE_INTERVAL = "update_interval"
 SETTING_TEMP_TIMEOUT = "temp_unavailable_timeout"
