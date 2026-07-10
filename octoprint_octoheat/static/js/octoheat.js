@@ -16,6 +16,7 @@ $(function() {
         self.heaterMode = ko.observable("auto");
         self.thermalRunawayTriggered = ko.observable(false);
         self.haConfigured = ko.observable(false);
+        self.heaterTitle = ko.observable("OctoHeat: click to cycle mode");
 
         self.testHaConnection = function() {
             self.connectionTestResult("Testing...");
@@ -46,17 +47,23 @@ $(function() {
             if (runaway) {
                 self.heater_indicator.addClass("runaway");
                 self.heater_warning.show();
+                self.heaterTitle("OctoHeat: THERMAL RUNAWAY - click to cycle mode");
             } else if (mode === "manual_on") {
                 self.heater_indicator.addClass("on");
+                self.heaterTitle("OctoHeat: manual ON - click to cycle mode");
             } else if (mode === "manual_off") {
                 self.heater_indicator.addClass("off");
+                self.heaterTitle("OctoHeat: manual OFF - click to cycle mode");
             } else {
                 if (isOn) {
                     self.heater_indicator.addClass("auto-heating");
+                    self.heaterTitle("OctoHeat: auto HEATING - click to cycle mode");
                 } else if (tempReached) {
                     self.heater_indicator.addClass("auto-waiting");
+                    self.heaterTitle("OctoHeat: auto idle (target reached) - click to cycle mode");
                 } else {
                     self.heater_indicator.addClass("auto-off");
+                    self.heaterTitle("OctoHeat: auto OFF - click to cycle mode");
                 }
             }
         };
