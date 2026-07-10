@@ -83,3 +83,9 @@
 #heater_indicator:hover {
     opacity: 0.8;
 }
+
+#heater_indicator.not-configured #heater_icon {
+    color: #888;
+    filter: grayscale(100%);
+    opacity: 0.5;
+}

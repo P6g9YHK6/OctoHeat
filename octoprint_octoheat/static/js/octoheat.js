@@ -34,6 +34,7 @@ $(function() {
         };
 
         self._updateIcon = function() {
+            var configured = self.haConfigured();
             var mode = self.heaterMode();
             var runaway = self.thermalRunawayTriggered();
             var isOn = self.heaterOn();
@@ -41,8 +42,27 @@ $(function() {
             var targetTemp = self.targetTemp();
             var tempReached = chamberTemp !== null && targetTemp !== null && chamberTemp >= targetTemp;
 
-            self.heater_indicator.removeClass("auto-heating auto-waiting auto-off on off runaway");
+            self.heater_indicator.removeClass("auto-heating auto-waiting auto-off on off runaway not-configured");
             self.heater_warning.hide();
+
+            if (!configured) {
+                self.heater_indicator.addClass("not-configured");
+                self.heater_icon.html("\uD83D\uDD27");
+                self.heaterTitle("OctoHeat: not configured \u2014 click to open settings");
+                self.heater_indicator.off("click").on("click", function() {
+                    OctoPrint.settings.show();
+                    setTimeout(function() {
+                        var el = $("#settings_plugin_octoheat");
+                        if (el.length) el[0].scrollIntoView({ behavior: "smooth" });
+                    }, 300);
+                });
+                return;
+            }
+
+            self.heater_indicator.off("click").on("click", function() {
+                OctoPrint.simpleApiCommand("octoheat", "cycleHeaterMode");
+            });
+            self.heater_icon.html("\uD83D\uDCA4");
 
             if (runaway) {
                 self.heater_indicator.addClass("runaway");
