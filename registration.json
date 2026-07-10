@@ -1,0 +1,26 @@
+{
+    "id": "octoheat",
+    "name": "OctoHeat",
+    "description": "Control a heater via Home Assistant based on temperature sensor readings. Supports multiple trigger modes (bed temperature, print running, thermostat), temperature control with offsets, and includes thermal runaway protection.",
+    "author": "P6g9YHK6",
+    "url": "https://github.com/P6g9YHK6/OctoHeat",
+    "license": "agplv3",
+    "privacy": "https://github.com/P6g9YHK6/OctoHeat/blob/main/PRIVACY.md",
+    "compatibility": {
+        "octoprint": [
+            ">=1.9.0"
+        ],
+        "python": [
+            ">=3.7"
+        ]
+    },
+    "tags": [
+        "heater",
+        "home assistant",
+        "temperature",
+        "thermal runaway",
+        "chamber"
+    ],
+    "screenshots": [],
+    "example_config_links": []
+}
