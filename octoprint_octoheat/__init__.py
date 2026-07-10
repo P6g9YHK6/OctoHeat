@@ -26,7 +26,7 @@ class OctoHeatPlugin(
 
     def get_settings_defaults(self):
         return {
-            const.SETTING_HA_URL: "http://homeassistant:8123",
+            const.SETTING_HA_URL: "https://homeassistant:8123",
             const.SETTING_HA_TOKEN: "",
             const.SETTING_HA_TEMP_SENSOR: "",
             const.SETTING_HA_HEATER_SWITCH: "",
@@ -47,6 +47,10 @@ class OctoHeatPlugin(
         }
 
     def on_after_startup(self):
+        ha_url = self._settings.get([const.SETTING_HA_URL])
+        if ha_url and ha_url.startswith("http://"):
+            logger.warning("OctoHeat: Home Assistant URL uses HTTP (insecure). "
+                           "Please switch to HTTPS for secure communication.")
         self._controller = HeaterController(self._settings)
         self._controller.set_printer(self._printer)
         self._start_polling()
