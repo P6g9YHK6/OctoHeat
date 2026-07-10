@@ -56,7 +56,6 @@ class OctoHeatPlugin(
                 data[key] = default
         if self.config_version_key in data:
             del data[self.config_version_key]
-        logger.info(f"on_settings_load: returning {len(data)} keys")
         return data
 
     def on_after_startup(self):
